@@ -1,0 +1,49 @@
+completion_models:
+  default_completion_model:
+    model_provider: azure
+    api_key: ${GRAPHRAG_API_KEY}
+    api_base: ${GRAPHRAG_API_BASE}
+    api_version: "2025-04-01-preview"
+    model: gpt-4.1
+    azure_deployment_name: gpt-4.1
+    retry:
+      type: exponential_backoff
+      max_retries: 6
+      base_delay: 1.0
+      jitter: true
+      max_delay: 60.0
+    rate_limit:
+      type: sliding_window
+      tokens_per_period: 250_000
+      requests_per_period: 260
+embedding_models:
+  default_embedding_model:
+    model_provider: azure
+    api_key: ${GRAPHRAG_API_KEY}
+    api_base: ${GRAPHRAG_API_BASE}
+    api_version: "2025-04-01-preview"
+    model: text-embedding-3-large
+    azure_deployment_name: text-embedding-3-large
+    retry:
+      type: exponential_backoff
+      max_retries: 6
+      base_delay: 2.0
+      jitter: true
+      max_delay: 60.0
+    rate_limit:
+      type: sliding_window
+      tokens_per_period: 250_000
+      requests_per_period: 250
+
+vector_store:
+  type: "lancedb"
+  db_uri: "./tests/fixtures/min-csv/lancedb"
+  overwrite: False
+  container_name: "lancedb_ci"
+
+input:
+  type: csv
+  encoding: utf-8-sig
+
+snapshots:
+  embeddings: true
